@@ -12,9 +12,10 @@
 
 輸入是環境部國家空品測站 2021～2025 年的逐時原始檔，輸出是三類東西：
 
-- **指標表**（`data/processed/`）：有效率、年均、百分位、月與日變化、風向頻率，給報告引用。
-- **設計輸入表**（`data/processed/`）：把指標翻成 PLAN.md 第 3 節 #1～#4 需要的數字，例如設計用外氣 PM 濃度 Cout、對應的 ISO 16890 濾網等級、AMC 相關氣體濃度、盛行風向。
-- **圖**（`report/figures/`）：時間序列、月／日剖面、風玫瑰、污染玫瑰。
+- **設計輸入表** `data/processed/01_design_inputs_Nanzih.csv`：設計組要拿走的唯一一張表，長格式（category、item、metric、value、unit、note），含 PM 統計（Cout）、AMC 濃度與 ISO 14644-8 等級、風向摘要。
+- **指標表** `01_aq_annual_stats_Nanzih.csv`（逐年統計含有效率）、`01_aq_profiles_Nanzih.csv`（月／日剖面合併長格式）、`01_aq_hourly_long.csv`（逐時長表，供重用）。
+- **圖**（`report/figures/01_*.png`）：時間序列、月／日剖面、風玫瑰、污染玫瑰。
+- 2026-10-22 整理：有效率表、風玫瑰與污染玫瑰數值表、ISO 16890 示例表只在 notebook 內顯示，不出檔；四張 `01_design_*.csv` 併成一張。
 
 ---
 
@@ -73,10 +74,10 @@ data/raw/airtw/<年>/<站>_<年>.csv
         │  第 3～5 節：指標計算（函式 coverage、annual_stats、
         │              monthly_profile、diurnal_profile、wind_rose、pollution_rose）
         ▼
-指標表 ──→ data/processed/01_aq_*.csv，圖 ──→ report/figures/01_*.png
+指標表 ──→ 01_aq_annual_stats_Nanzih.csv、01_aq_profiles_Nanzih.csv，圖 ──→ report/figures/01_*.png
         │  第 6 節：翻成設計輸入（函式 design_cout、design_iso16890、design_amc、design_wind）
         ▼
-設計輸入表 ──→ data/processed/01_design_*.csv
+設計輸入表 ──→ data/processed/01_design_inputs_Nanzih.csv（單一長格式檔）
 ```
 
 每個章節的函式只吃長表（或上一節的小表）、回傳一張表，cell 之間不靠隱藏的全域狀態傳遞，這樣你逐 cell 看時每個 cell 的輸入輸出都明確。
@@ -126,7 +127,7 @@ data/raw/airtw/<年>/<站>_<年>.csv
 ## 5. 關鍵取捨
 
 - **年度檔 vs API**：API 只有 2023 年，年度檔有完整 5 年；代價是要手動下載。選年度檔，因為沒有 5 年資料就做不出季節與年際變化。
-- **設計濃度取 P95 而非平均或最大值**：平均會低估高污染時段，最大值常是沙塵或異常事件，P95 代表「一年中 438 小時會超過」的水準，是濾網選型常用的保守值。報告中三個數字都列，由設計組決定。
+- **設計濃度的百分位不預設**：平均、P50、P95、P99、最大值並列，由設計組決定取哪一個；notebook 內的示例換算用 P95 當參考值（`REF_PCT`），只是示範。2026-10-22 依使用者意見把原本「設計用 P95」的寫法全部改成中性並列。
 - **不做質量→粒子數換算**：換算要假設粒徑分布與密度，測站都沒有量，結果缺乏依據；只用質量濃度與 ISO 16890，粒子數留給設計組另行取得。
 - **全部寫在 notebook 內**：之後南科、中科會有三本幾乎一樣的 notebook，中途改統計邏輯要改三處；以期末專案的規模，這比維護模組便宜。
 - **先只做楠梓**：站名與路徑參數化，之後只換第 1 節設定與原始檔。
@@ -138,5 +139,5 @@ data/raw/airtw/<年>/<站>_<年>.csv
 - [ ] 第 2.3 節：只做楠梓，或加三個對照站。
 - [x] 下載 2021～2025 年「高屏空品區 全年逐時資料」並解壓（已完成）。
 - [ ] 楠梓產業園區的位置：是指中油高雄煉油廠舊址（台積電高雄廠）那塊嗎？這會影響 nb03 算測站到廠址距離與周邊污染源方位，本 notebook 不需要。
-- [ ] 設計用濃度的百分位（預設 P95，另列平均與 P99）。
+- [x] 設計用濃度的百分位：不預設，統計量並列，由設計組決定（2026-10-22）。
 - [ ] 需要的套件：目前 pandas、matplotlib 足夠；風玫瑰用 matplotlib 極座標自畫，不加 windrose 套件。
