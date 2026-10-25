@@ -18,3 +18,6 @@ data/raw/*
 
 # secrets
 .env
+
+# Claude instructions (local only)
+CLAUDE.md
