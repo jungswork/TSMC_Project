@@ -10,7 +10,7 @@ wheels/
 .venv
 
 # file
-ref/*.pdf
+ref/
 # site-analysis data & notebook artifacts
 data/raw/*
 !data/raw/.gitkeep
