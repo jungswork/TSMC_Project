@@ -72,14 +72,13 @@
 
 ```powershell
 uv sync
-uv run jupyter lab
 ```
 
 執行順序：
 
 1. 依「資料來源」下載空品年度檔，解壓到 `data/raw/airtw/2021/` … `data/raw/airtw/2025/`，檔名維持原樣（例如 `楠梓_2023.csv`）。
-2. 開 `notebooks/01_Air_Quality_Nanzih.ipynb` 整本執行。
-3. 開 `notebooks/02_Climate_Nanzih.ipynb` 整本執行；第一次會連線下載約 1 分鐘。
+2. `notebooks/01_Air_Quality_Nanzih.ipynb` 整本執行。
+3. `notebooks/02_Climate_Nanzih.ipynb` 整本執行；第一次會連線下載約 1 分鐘。
 
 每本 notebook 的第 1 節是全部設定（測站、年份、門檻），要換站或換年只改那一個 cell。
 
@@ -93,7 +92,6 @@ uv run jupyter lab
 | `data/raw/` | 下載的原始資料，不進版控 |
 | `data/processed/` | notebook 輸出的表；`*_design_inputs_*.csv` 是給設計組的檔，其餘是中間結果與逐時表 |
 | `report/figures/` | notebook 輸出的圖，檔名以 notebook 編號開頭 |
-| `ref/` | 課程講義抽出的純文字（`*.txt`）；PDF 原檔不進版控 |
 | `src/site_analysis/` | 保留給共用函式，目前未使用 |
 
 檔名規則：輸出檔以 notebook 編號開頭、地點代號結尾，例如 `02_design_inputs_Nanzih.csv`、`02_psychrometric_scatter_Nanzih.png`，不同 notebook 的輸出不會互相覆蓋。
@@ -104,4 +102,4 @@ uv run jupyter lab
 
 - **不要提交 `.env`**：放個人 API key 用，已在 `.gitignore`。
 - **不要提交 `data/raw/`**：原始資料各自下載。
-- **notebook 提交前**：若不想把輸出圖表一起提交，可先在 Jupyter 選「Clear All Outputs」再存檔，diff 會乾淨很多。
+- **notebook 提交前**：若不想把輸出圖表一起提交，可先清除所有 cell 的輸出再存檔，diff 會乾淨很多。
